@@ -1,0 +1,153 @@
+/* Simply Reviews — testimonial slider
+   Tokens used:
+     --client-accent       → star fill color
+     --client-heading      → review text color
+     --client-dark         → dot fill / meta text
+     --client-font-display → review text font
+     --client-font-primary → meta font
+*/
+
+/* ── Slider container ─────────────────────────────────────────────── */
+
+.sr-slider {
+	text-align: center;
+	padding: 2rem 1rem;
+	position: relative;
+	overflow: hidden;
+}
+
+/* ── Slides ───────────────────────────────────────────────────────── */
+
+.sr-slide {
+	display: none;
+}
+
+.sr-slide.is-active {
+	display: block;
+	animation: sr-fade-in 0.45s ease;
+}
+
+@keyframes sr-fade-in {
+	from { opacity: 0; transform: translateY(6px); }
+	to   { opacity: 1; transform: translateY(0);   }
+}
+
+/* ── Stars ────────────────────────────────────────────────────────── */
+
+.sr-stars {
+	display: flex;
+	justify-content: center;
+	gap: 0.2rem;
+	margin-bottom: 1.25rem;
+	font-size: 1.6rem;
+	line-height: 1;
+}
+
+.sr-star {
+	color: #ccc;
+}
+
+.sr-star.filled {
+	color: var( --client-accent, #f59e0b );
+}
+
+/* ── Quote ────────────────────────────────────────────────────────── */
+
+.sr-quote {
+	position: relative;
+	max-width: 780px;
+	margin: 0 auto;
+	padding: 0 1rem 0 3.5rem;
+}
+
+/* Decorative opening quote mark */
+.sr-quote::before {
+	content: '\201C';
+	position: absolute;
+	left: -0.25rem;
+	top: -1rem;
+	font-size: 7rem;
+	line-height: 1;
+	font-family: Georgia, 'Times New Roman', serif;
+	color: rgba( 0, 0, 0, 0.07 );
+	pointer-events: none;
+	user-select: none;
+}
+
+.sr-text,
+.sr-text p {
+	font-size: clamp( 1.15rem, 2.5vw, 1.65rem );
+	line-height: 1.45;
+	color: var( --client-heading, #1a1a1a );
+	font-family: var( --client-font-display, inherit );
+	font-weight: 400;
+	margin: 0;
+}
+
+/* strip extra margin from wpautop wrapping <p> */
+.sr-text p:last-child {
+	margin-bottom: 0;
+}
+
+/* ── Meta (name / source / date) ──────────────────────────────────── */
+
+.sr-meta {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.4rem 0.75rem;
+	margin-top: 1.25rem;
+	font-size: 0.9rem;
+	font-family: var( --client-font-primary, inherit );
+	color: var( --client-dark, #333 );
+}
+
+.sr-name {
+	font-weight: 600;
+}
+
+.sr-name::before {
+	content: '— ';
+}
+
+.sr-source {
+	opacity: 0.65;
+	font-size: 0.8rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.sr-date {
+	opacity: 0.55;
+	font-size: 0.8rem;
+}
+
+/* ── Dot navigation ───────────────────────────────────────────────── */
+
+.sr-dots {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 0.5rem;
+	margin-top: 1.75rem;
+}
+
+.sr-dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	border: 2px solid var( --client-dark, #1a1a1a );
+	background: transparent;
+	padding: 0;
+	cursor: pointer;
+	transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.sr-dot.is-active {
+	background: var( --client-dark, #1a1a1a );
+}
+
+.sr-dot:hover:not(.is-active) {
+	background: rgba( 0, 0, 0, 0.15 );
+}
