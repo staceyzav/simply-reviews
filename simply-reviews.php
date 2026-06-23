@@ -21,7 +21,28 @@ define( 'SR_URL',     plugin_dir_url( __FILE__ ) );
 require_once SR_PATH . 'includes/class-github-updater.php';
 new Simply_GitHub_Updater( 'plugin', plugin_basename( __FILE__ ), 'staceyzav/simply-reviews', SR_VERSION );
 
-// ── CPT ──────────────────────────────────────────────────────────────────────
+// ── CPT + TAXONOMY ───────────────────────────────────────────────────────────
+
+add_action( 'init', 'sr_register_taxonomy' );
+function sr_register_taxonomy() {
+	register_taxonomy( 'sr_category', 'simply_review', [
+		'labels' => [
+			'name'              => __( 'Review Categories', 'simply-reviews' ),
+			'singular_name'     => __( 'Review Category',  'simply-reviews' ),
+			'add_new_item'      => __( 'Add New Category',  'simply-reviews' ),
+			'edit_item'         => __( 'Edit Category',     'simply-reviews' ),
+			'search_items'      => __( 'Search Categories', 'simply-reviews' ),
+			'all_items'         => __( 'All Categories',    'simply-reviews' ),
+			'menu_name'         => __( 'Categories',        'simply-reviews' ),
+		],
+		'hierarchical'      => true,
+		'show_ui'           => true,
+		'show_in_menu'      => true,
+		'show_admin_column' => true,
+		'show_in_rest'      => true,
+		'rewrite'           => false,
+	] );
+}
 
 add_action( 'init', 'sr_register_cpt' );
 function sr_register_cpt() {
@@ -129,6 +150,7 @@ function sr_shortcode( $atts ) {
 		'show_date'   => 0,
 		'min_stars'   => 1,
 		'source'      => '',
+		'category'    => '',
 		'autoplay'    => 0,
 	], $atts );
 
@@ -144,6 +166,14 @@ function sr_shortcode( $atts ) {
 		$query_args['meta_query'] = [ [
 			'key'   => '_review_source',
 			'value' => sanitize_text_field( $a['source'] ),
+		] ];
+	}
+
+	if ( ! empty( $a['category'] ) ) {
+		$query_args['tax_query'] = [ [
+			'taxonomy' => 'sr_category',
+			'field'    => 'slug',
+			'terms'    => array_map( 'sanitize_title', explode( ',', $a['category'] ) ),
 		] ];
 	}
 
