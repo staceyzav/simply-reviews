@@ -11,12 +11,20 @@
 
 		if ( slides.length <= 1 ) return;
 
+		function setWidths() {
+			var w = slider.offsetWidth;
+			slides.forEach( function ( slide ) { slide.style.width = w + 'px'; } );
+		}
+
+		setWidths();
+		window.addEventListener( 'resize', setWidths );
+
 		function goTo( index ) {
 			dots[ current ] && dots[ current ].classList.remove( 'is-active' );
 
 			current = ( ( index % slides.length ) + slides.length ) % slides.length;
 
-			slidesTrack.style.transform = 'translateX(-' + ( current * 100 ) + '%)';
+			slidesTrack.style.transform = 'translateX(-' + ( current * slider.offsetWidth ) + 'px)';
 			dots[ current ] && dots[ current ].classList.add( 'is-active' );
 		}
 

@@ -5,7 +5,7 @@
  * Description: Curated testimonial slider. Add highlight reviews manually, display with [simply_reviews]. Zero dependencies — works on any theme.
  * Author:      Simply Design
  * Author URI:  https://simplydesign.com
- * Version:     1.0.0
+ * Version:     1.0.1
  * License:     GPL-2.0-or-later
  * Text Domain: simply-reviews
  * Requires at least: 5.4
@@ -14,7 +14,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'SR_VERSION', '1.0.0' );
+define( 'SR_VERSION', '1.0.1' );
 define( 'SR_PATH',    plugin_dir_path( __FILE__ ) );
 define( 'SR_URL',     plugin_dir_url( __FILE__ ) );
 
@@ -211,7 +211,7 @@ function sr_shortcode( $atts ) {
 				</div>
 
 				<div class="sr-quote">
-					<p class="sr-text"><?php echo wp_kses_post( wpautop( $review->post_content ) ); ?></p>
+					<div class="sr-text"><?php echo wp_kses_post( wpautop( $review->post_content ) ); ?></div>
 				</div>
 
 				<?php if ( $show_name || $show_source || $show_date ) : ?>
