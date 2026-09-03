@@ -25,7 +25,7 @@ new Simply_GitHub_Updater( 'plugin', plugin_basename( __FILE__ ), 'staceyzav/sim
 
 add_action( 'init', 'sr_register_taxonomy' );
 function sr_register_taxonomy() {
-	register_taxonomy( 'sr_category', 'simply_review', [
+	register_taxonomy( 'sr_category', [ 'simply_review', 'page' ], [
 		'labels' => [
 			'name'              => __( 'Review Categories', 'simply-reviews' ),
 			'singular_name'     => __( 'Review Category',  'simply-reviews' ),
@@ -33,7 +33,7 @@ function sr_register_taxonomy() {
 			'edit_item'         => __( 'Edit Category',     'simply-reviews' ),
 			'search_items'      => __( 'Search Categories', 'simply-reviews' ),
 			'all_items'         => __( 'All Categories',    'simply-reviews' ),
-			'menu_name'         => __( 'Categories',        'simply-reviews' ),
+			'menu_name'         => __( 'Review Categories', 'simply-reviews' ),
 		],
 		'hierarchical'      => true,
 		'show_ui'           => true,
@@ -144,15 +144,23 @@ function sr_enqueue() {
 add_shortcode( 'simply_reviews', 'sr_shortcode' );
 function sr_shortcode( $atts ) {
 	$a = shortcode_atts( [
-		'limit'       => -1,
-		'show_name'   => 1,
-		'show_source' => 0,
-		'show_date'   => 0,
-		'min_stars'   => 1,
-		'source'      => '',
-		'category'    => '',
-		'autoplay'    => 0,
+		'limit'          => -1,
+		'show_name'      => 1,
+		'show_source'    => 0,
+		'show_date'      => 0,
+		'min_stars'      => 1,
+		'source'         => '',
+		'category'       => '',
+		'autoplay'       => 0,
+		'match_page_cat' => '',
 	], $atts );
+
+	if ( filter_var( $a['match_page_cat'], FILTER_VALIDATE_BOOLEAN ) && empty( $a['category'] ) ) {
+		$page_terms = get_the_terms( get_the_ID(), 'sr_category' );
+		if ( $page_terms && ! is_wp_error( $page_terms ) ) {
+			$a['category'] = implode( ',', wp_list_pluck( $page_terms, 'slug' ) );
+		}
+	}
 
 	$query_args = [
 		'post_type'      => 'simply_review',
