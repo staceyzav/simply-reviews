@@ -18,8 +18,6 @@ define( 'SR_VERSION', '1.0.1' );
 define( 'SR_PATH',    plugin_dir_path( __FILE__ ) );
 define( 'SR_URL',     plugin_dir_url( __FILE__ ) );
 
-require_once SR_PATH . 'includes/class-github-updater.php';
-new Simply_GitHub_Updater( 'plugin', plugin_basename( __FILE__ ), 'staceyzav/simply-reviews', SR_VERSION );
 
 // ── CPT + TAXONOMY ───────────────────────────────────────────────────────────
 
@@ -204,6 +202,7 @@ function sr_shortcode( $atts ) {
 	ob_start();
 	?>
 	<div class="sr-slider" data-autoplay="<?php echo esc_attr( $autoplay ); ?>">
+		<div class="sr-viewport">
 		<div class="sr-slides">
 			<?php foreach ( $reviews as $i => $review ) :
 				$rating = (int) ( get_post_meta( $review->ID, '_review_rating', true ) ?: 5 );
@@ -238,6 +237,7 @@ function sr_shortcode( $atts ) {
 
 			</div>
 			<?php endforeach; ?>
+		</div>
 		</div>
 
 		<?php if ( $count > 1 ) : ?>

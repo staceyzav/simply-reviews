@@ -16,13 +16,18 @@
 	text-align: center;
 	padding: 2rem 1rem;
 	position: relative;
-	overflow: hidden;
 }
 
-/* ── Slides track — slides sit in a flex row, track translates ────── */
+/* ── Viewport clips; track translates inside it ───────────────────── */
+
+.sr-viewport {
+	overflow: hidden;
+	transition: height 0.4s cubic-bezier( 0.4, 0, 0.2, 1 );
+}
 
 .sr-slides {
 	display: flex;
+	align-items: flex-start;
 	transition: transform 0.45s cubic-bezier( 0.4, 0, 0.2, 1 );
 	will-change: transform;
 }
@@ -137,21 +142,24 @@
 	width: 10px;
 	height: 10px;
 	border-radius: 50%;
-	border: 2px solid var( --client-dark, #1a1a1a );
+	border: 2px solid currentColor;
 	background: transparent;
 	padding: 0;
 	cursor: pointer;
 	transition: background 0.2s ease, border-color 0.2s ease;
 	appearance: none;
 	-webkit-appearance: none;
+	color: inherit;
+	opacity: 0.45;
 }
 
 .sr-dot.is-active {
-	background: var( --client-dark, #1a1a1a );
+	background: currentColor;
+	opacity: 1;
 }
 
 .sr-dot:hover:not(.is-active) {
-	background: rgba( 0, 0, 0, 0.15 );
+	opacity: 0.7;
 }
 
 /* ── Mobile ───────────────────────────────────────────────────────── */

@@ -2,6 +2,7 @@
 	'use strict';
 
 	document.querySelectorAll( '.sr-slider' ).forEach( function ( slider ) {
+		var viewport    = slider.querySelector( '.sr-viewport' );
 		var slidesTrack = slider.querySelector( '.sr-slides' );
 		var slides      = Array.from( slider.querySelectorAll( '.sr-slide' ) );
 		var dots        = Array.from( slider.querySelectorAll( '.sr-dot' ) );
@@ -14,6 +15,12 @@
 		function setWidths() {
 			var w = slider.offsetWidth;
 			slides.forEach( function ( slide ) { slide.style.width = w + 'px'; } );
+			setHeight( current );
+		}
+
+		function setHeight( index ) {
+			var h = slides[ index ] ? slides[ index ].offsetHeight : 0;
+			if ( h ) viewport.style.height = h + 'px';
 		}
 
 		setWidths();
@@ -26,6 +33,7 @@
 
 			slidesTrack.style.transform = 'translateX(-' + ( current * slider.offsetWidth ) + 'px)';
 			dots[ current ] && dots[ current ].classList.add( 'is-active' );
+			setHeight( current );
 		}
 
 		dots.forEach( function ( dot ) {
