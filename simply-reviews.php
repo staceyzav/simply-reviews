@@ -248,6 +248,9 @@ function sr_shortcode( $atts ) {
 				     aria-label="<?php echo esc_attr( sprintf( 'Play video review by %s', $review->post_title ) ); ?>">
 
 					<div class="sr-video-caption">
+					<div class="sr-video-play-icon" aria-hidden="true">
+						<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="none" stroke="white" stroke-width="1.5"/><polygon points="9.5,6.5 19,12 9.5,17.5" fill="white"/></svg>
+					</div>
 						<?php if ( $snippet ) : ?>
 						<div class="sr-quote">
 							<div class="sr-text"><?php echo esc_html( $snippet ); ?></div>
