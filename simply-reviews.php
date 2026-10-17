@@ -5,7 +5,7 @@
  * Description: Curated testimonial slider. Add highlight reviews manually, display with [simply_reviews]. Zero dependencies — works on any theme.
  * Author:      Simply Design
  * Author URI:  https://simplydesign.com
- * Version:     1.0.6
+ * Version:     1.0.7
  * License:     GPL-2.0-or-later
  * Text Domain: simply-reviews
  * Requires at least: 5.4
@@ -14,7 +14,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'SR_VERSION', '1.0.6' );
+define( 'SR_VERSION', '1.0.7' );
 define( 'SR_PATH',    plugin_dir_path( __FILE__ ) );
 define( 'SR_URL',     plugin_dir_url( __FILE__ ) );
 
