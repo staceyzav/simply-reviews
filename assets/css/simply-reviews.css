@@ -14,7 +14,7 @@
 	min-width: 0;
 	box-sizing: border-box;
 	text-align: center;
-	padding: 2rem 1rem;
+	padding: 0;
 	position: relative;
 }
 
@@ -171,27 +171,29 @@
 .sr-video-thumb {
 	position: relative;
 	width: 100%;
-	aspect-ratio: 16 / 9;
+	min-height: 250px;
 	background-size: cover;
-	background-position: center;
+	background-position: top center;
 	background-color: #111;
 	cursor: pointer;
-	border-radius: 6px;
 	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
-/* dark scrim so caption text is always readable */
+/* dark scrim so text is always readable */
 .sr-video-thumb::before {
 	content: '';
 	position: absolute;
 	inset: 0;
-	background: rgba( 0, 0, 0, 0.25 );
+	background: rgba( 0, 0, 0, 0.45 );
 	transition: background 0.2s ease;
 }
 
 .sr-video-thumb:hover::before,
 .sr-video-thumb:focus::before {
-	background: rgba( 0, 0, 0, 0.35 );
+	background: rgba( 0, 0, 0, 0.55 );
 }
 
 .sr-video-thumb:focus {
@@ -199,62 +201,83 @@
 	outline-offset: 3px;
 }
 
-/* ── Play button ──────────────────────────────────────────────────── */
+/* ── Play button — top-right corner ──────────────────────────────── */
 
 .sr-play-btn {
 	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate( -50%, -60% ); /* shift up slightly to clear caption */
-	width: 64px;
-	height: 64px;
+	top: 1rem;
+	right: 1rem;
+	width: 44px;
+	height: 44px;
 	border-radius: 50%;
-	background: rgba( 255, 255, 255, 0.92 );
+	background: rgba( 255, 255, 255, 0.85 );
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	transition: transform 0.2s ease, background 0.2s ease;
+	transition: background 0.2s ease, transform 0.2s ease;
 	pointer-events: none;
+	z-index: 1;
 }
 
 .sr-video-thumb:hover .sr-play-btn,
 .sr-video-thumb:focus .sr-play-btn {
-	transform: translate( -50%, -60% ) scale( 1.1 );
 	background: #fff;
+	transform: scale( 1.1 );
 }
 
 .sr-play-btn svg {
-	width: 24px;
-	height: 24px;
+	width: 16px;
+	height: 16px;
 	fill: var( --client-dark, #111 );
-	margin-left: 4px; /* optical center for triangle */
+	margin-left: 3px;
 }
 
-/* ── Caption overlay (quote + name) ───────────────────────────────── */
+/* ── Caption overlay — centered, matching text slide layout ───────── */
 
 .sr-video-caption {
+	position: relative;
+	z-index: 1;
+	text-align: center;
+	padding: 2rem 1rem;
+	width: 100%;
+}
+
+/* Inherit exact same quote + text styles; override color to white */
+.sr-video-caption .sr-quote {
+	position: relative;
+	max-width: 100%;
+	margin: 0 auto;
+	padding: 0 1rem 0 3.5rem;
+	box-sizing: border-box;
+}
+
+.sr-video-caption .sr-quote::before {
+	content: '\201C';
 	position: absolute;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	padding: 2.5rem 1.5rem 1.25rem;
-	background: linear-gradient( transparent, rgba( 0, 0, 0, 0.72 ) );
-	text-align: left;
+	left: -0.25rem;
+	top: -1rem;
+	font-size: 7rem;
+	line-height: 1;
+	font-family: Georgia, 'Times New Roman', serif;
+	color: rgba( 255, 255, 255, 0.25 );
+	pointer-events: none;
+	user-select: none;
 }
 
 .sr-video-caption .sr-text,
 .sr-video-caption .sr-text p {
-	font-size: clamp( 0.95rem, 2vw, 1.15rem );
-	color: #fff;
-	margin: 0 0 0.6rem;
+	font-size: clamp( 1.15rem, 2.5vw, 1.65rem );
 	line-height: 1.45;
+	color: #fff;
+	font-family: var( --client-font-display, inherit );
+	font-weight: 400;
+	margin: 0;
 }
 
 .sr-video-caption .sr-meta {
-	justify-content: flex-start;
-	margin-top: 0.4rem;
+	justify-content: center;
+	margin-top: 1.25rem;
 	color: rgba( 255, 255, 255, 0.85 );
-	font-size: 0.85rem;
 }
 
 .sr-video-caption .sr-name {

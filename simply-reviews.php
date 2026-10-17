@@ -249,7 +249,9 @@ function sr_shortcode( $atts ) {
 
 					<div class="sr-video-caption">
 						<?php if ( $snippet ) : ?>
-						<div class="sr-text"><?php echo esc_html( $snippet ); ?></div>
+						<div class="sr-quote">
+							<div class="sr-text"><?php echo esc_html( $snippet ); ?></div>
+						</div>
 						<?php endif; ?>
 						<div class="sr-meta">
 							<?php if ( $review->post_title ) : ?>
