@@ -101,6 +101,13 @@ function sr_meta_box_cb( $post ) {
 		<input type="text" name="sr_date" id="sr_date" value="<?php echo esc_attr( $date ); ?>"
 			   placeholder="e.g. January 2025" style="width:100%;margin-top:4px;">
 	</p>
+	<p>
+		<label for="sr_youtube"><strong><?php esc_html_e( 'YouTube URL', 'simply-reviews' ); ?></strong></label><br>
+		<input type="url" name="sr_youtube" id="sr_youtube"
+			   value="<?php echo esc_attr( get_post_meta( $post->ID, '_review_youtube', true ) ); ?>"
+			   placeholder="https://youtu.be/..." style="width:100%;margin-top:4px;">
+		<span style="color:#666;font-size:11px;display:block;margin-top:4px;"><?php esc_html_e( 'Optional. When set, slide shows video thumbnail + snippet overlay.', 'simply-reviews' ); ?></span>
+	</p>
 	<p style="color:#666;font-size:11px;margin-top:8px;">
 		<?php esc_html_e( 'Reviewer name = post title. Review text = post body. Drag to reorder in All Reviews.', 'simply-reviews' ); ?>
 	</p>
@@ -127,6 +134,17 @@ function sr_save_meta( $post_id ) {
 	if ( isset( $_POST['sr_date'] ) ) {
 		update_post_meta( $post_id, '_review_date', sanitize_text_field( $_POST['sr_date'] ) );
 	}
+	if ( isset( $_POST['sr_youtube'] ) ) {
+		update_post_meta( $post_id, '_review_youtube', esc_url_raw( $_POST['sr_youtube'] ) );
+	}
+}
+
+function sr_extract_youtube_id( $url ) {
+	if ( ! $url ) return '';
+	if ( preg_match( '/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/', $url, $m ) ) {
+		return $m[1];
+	}
+	return '';
 }
 
 // ── ENQUEUE ───────────────────────────────────────────────────────────────────
@@ -205,11 +223,47 @@ function sr_shortcode( $atts ) {
 		<div class="sr-viewport">
 		<div class="sr-slides">
 			<?php foreach ( $reviews as $i => $review ) :
-				$rating = (int) ( get_post_meta( $review->ID, '_review_rating', true ) ?: 5 );
-				$source = get_post_meta( $review->ID, '_review_source', true );
-				$date   = get_post_meta( $review->ID, '_review_date',   true );
+				$rating   = (int) ( get_post_meta( $review->ID, '_review_rating', true ) ?: 5 );
+				$source   = get_post_meta( $review->ID, '_review_source',  true );
+				$date     = get_post_meta( $review->ID, '_review_date',    true );
+				$yt_url   = get_post_meta( $review->ID, '_review_youtube', true );
+				$yt_id    = sr_extract_youtube_id( $yt_url );
+				$is_video = ! empty( $yt_id );
 			?>
-			<div class="sr-slide<?php echo $i === 0 ? ' is-active' : ''; ?>">
+			<div class="sr-slide<?php echo $i === 0 ? ' is-active' : ''; ?><?php echo $is_video ? ' sr-slide--video' : ''; ?>">
+
+			<?php if ( $is_video ) :
+				$thumb_url = 'https://img.youtube.com/vi/' . $yt_id . '/maxresdefault.jpg';
+				$snippet   = wp_strip_all_tags( $review->post_content );
+			?>
+				<div class="sr-video-thumb"
+				     style="background-image:url('<?php echo esc_url( $thumb_url ); ?>')"
+				     data-yt-id="<?php echo esc_attr( $yt_id ); ?>"
+				     role="button"
+				     tabindex="0"
+				     aria-label="<?php echo esc_attr( sprintf( 'Play video review by %s', $review->post_title ) ); ?>">
+
+					<div class="sr-play-btn" aria-hidden="true">
+						<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="6,3 20,12 6,21"/></svg>
+					</div>
+
+					<div class="sr-video-caption">
+						<?php if ( $snippet ) : ?>
+						<div class="sr-text"><?php echo esc_html( $snippet ); ?></div>
+						<?php endif; ?>
+						<div class="sr-meta">
+							<?php if ( $review->post_title ) : ?>
+							<span class="sr-name"><?php echo esc_html( $review->post_title ); ?></span>
+							<?php endif; ?>
+							<?php if ( $show_date && $date ) : ?>
+							<span class="sr-date"><?php echo esc_html( $date ); ?></span>
+							<?php endif; ?>
+						</div>
+					</div>
+
+				</div>
+
+			<?php else : ?>
 
 				<div class="sr-stars" aria-label="<?php printf( esc_attr__( '%d out of 5 stars', 'simply-reviews' ), $rating ); ?>">
 					<?php for ( $s = 1; $s <= 5; $s++ ) : ?>
@@ -234,6 +288,8 @@ function sr_shortcode( $atts ) {
 					<?php endif; ?>
 				</div>
 				<?php endif; ?>
+
+			<?php endif; ?>
 
 			</div>
 			<?php endforeach; ?>

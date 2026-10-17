@@ -55,3 +55,67 @@
 		}
 	} );
 } )();
+
+// ── YouTube video lightbox ────────────────────────────────────────────────
+
+( function () {
+	'use strict';
+
+	var lightbox, frame;
+
+	function buildLightbox() {
+		lightbox = document.createElement( 'div' );
+		lightbox.className = 'sr-lightbox';
+		lightbox.setAttribute( 'hidden', '' );
+		lightbox.setAttribute( 'role', 'dialog' );
+		lightbox.setAttribute( 'aria-modal', 'true' );
+		lightbox.setAttribute( 'aria-label', 'Video review' );
+		lightbox.innerHTML =
+			'<div class="sr-lightbox__overlay"></div>' +
+			'<div class="sr-lightbox__inner">' +
+				'<button class="sr-lightbox__close" aria-label="Close video">&times;</button>' +
+				'<div class="sr-lightbox__frame"></div>' +
+			'</div>';
+		document.body.appendChild( lightbox );
+
+		frame = lightbox.querySelector( '.sr-lightbox__frame' );
+
+		lightbox.querySelector( '.sr-lightbox__overlay' ).addEventListener( 'click', closeLightbox );
+		lightbox.querySelector( '.sr-lightbox__close' ).addEventListener( 'click', closeLightbox );
+	}
+
+	function openLightbox( ytId ) {
+		if ( ! lightbox ) buildLightbox();
+		frame.innerHTML =
+			'<iframe src="https://www.youtube.com/embed/' + ytId +
+			'?autoplay=1&rel=0" allow="autoplay; fullscreen" allowfullscreen></iframe>';
+		lightbox.removeAttribute( 'hidden' );
+		document.body.style.overflow = 'hidden';
+		lightbox.querySelector( '.sr-lightbox__close' ).focus();
+	}
+
+	function closeLightbox() {
+		if ( ! lightbox ) return;
+		lightbox.setAttribute( 'hidden', '' );
+		frame.innerHTML = '';
+		document.body.style.overflow = '';
+	}
+
+	document.addEventListener( 'keydown', function ( e ) {
+		if ( e.key === 'Escape' ) closeLightbox();
+	} );
+
+	document.addEventListener( 'click', function ( e ) {
+		var thumb = e.target.closest( '.sr-video-thumb' );
+		if ( ! thumb ) return;
+		openLightbox( thumb.dataset.ytId );
+	} );
+
+	document.addEventListener( 'keydown', function ( e ) {
+		if ( e.key !== 'Enter' && e.key !== ' ' ) return;
+		var thumb = e.target.closest( '.sr-video-thumb' );
+		if ( ! thumb ) return;
+		e.preventDefault();
+		openLightbox( thumb.dataset.ytId );
+	} );
+} )();
