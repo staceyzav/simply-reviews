@@ -87,6 +87,7 @@
 	font-family: var( --client-font-display, inherit );
 	font-weight: 400;
 	margin: 0;
+	margin-bottom: 20px;
 }
 
 /* strip extra margin from wpautop wrapping <p> */
@@ -187,13 +188,13 @@
 	content: '';
 	position: absolute;
 	inset: 0;
-	background: rgba( 0, 0, 0, 0.9 );
+	background: rgba( 0, 0, 0, 0.8 );
 	transition: background 0.2s ease;
 }
 
 .sr-video-thumb:hover::before,
 .sr-video-thumb:focus::before {
-	background: rgba( 0, 0, 0, 0.9 );
+	background: rgba( 0, 0, 0, 0.8 );
 }
 
 .sr-video-thumb:focus {
@@ -208,7 +209,7 @@
 	z-index: 1;
 	text-align: center;
 	width: 100%;
-	padding: 15% 0;
+	padding: 5% 0;
 }
 
 /* Play icon — real element, in flow above the quote text */
