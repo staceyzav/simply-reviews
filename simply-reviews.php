@@ -217,9 +217,13 @@ function sr_shortcode( $atts ) {
 	$autoplay    = absint( $a['autoplay'] );
 	$count       = count( $reviews );
 
+	$has_video = ! empty( array_filter( $reviews, function( $r ) {
+		return sr_extract_youtube_id( get_post_meta( $r->ID, '_review_youtube', true ) );
+	} ) );
+
 	ob_start();
 	?>
-	<div class="sr-slider" data-autoplay="<?php echo esc_attr( $autoplay ); ?>">
+	<div class="sr-slider<?php echo $has_video ? ' sr-slider--has-video' : ''; ?>" data-autoplay="<?php echo esc_attr( $autoplay ); ?>">
 		<div class="sr-viewport">
 		<div class="sr-slides">
 			<?php foreach ( $reviews as $i => $review ) :
@@ -242,10 +246,6 @@ function sr_shortcode( $atts ) {
 				     role="button"
 				     tabindex="0"
 				     aria-label="<?php echo esc_attr( sprintf( 'Play video review by %s', $review->post_title ) ); ?>">
-
-					<div class="sr-play-btn" aria-hidden="true">
-						<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="6,3 20,12 6,21"/></svg>
-					</div>
 
 					<div class="sr-video-caption">
 						<?php if ( $snippet ) : ?>
