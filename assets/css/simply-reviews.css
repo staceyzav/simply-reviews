@@ -208,6 +208,7 @@
 	z-index: 1;
 	text-align: center;
 	width: 100%;
+	padding: 15% 0;
 }
 
 /* Play icon — real element, in flow above the quote text */
@@ -238,7 +239,8 @@
 
 /* suppress the decorative quote mark on video slides */
 .sr-video-caption .sr-quote::before {
-	display: none;
+	content: '' !important;
+	display: none !important;
 }
 
 .sr-video-caption .sr-text,
